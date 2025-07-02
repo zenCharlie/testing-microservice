@@ -16,8 +16,8 @@ def get_db():
 
 
 @app.get("/aggregates/", response_model=List[schemas.GeoJSONFeature])
-def get_aggregated(day: str, period: str, db: Session = Depends(get_db)):
-    rows = crud.get_aggregated_speed(db, day, period)
+def get_aggregated(day_of_week: str, time_period: str, db: Session = Depends(get_db)):
+    rows = crud.get_aggregated_speed(db, day_of_week, time_period)
     features = []
     for row in rows:
         geom = to_shape(row.geometry)
@@ -35,8 +35,8 @@ def get_aggregated(day: str, period: str, db: Session = Depends(get_db)):
 
 
 @app.get("/aggregates/{link_id}", response_model=schemas.GeoJSONFeature)
-def get_link_info(link_id: str, day: str, period: str, db: Session = Depends(get_db)):
-    row = crud.get_link_aggregate(db, link_id, day, period)
+def get_link_info(link_id: str, day_of_week: str, time_period: str, db: Session = Depends(get_db)):
+    row = crud.get_link_aggregate(db, link_id, day_of_week, time_period)
     if not row:
         raise HTTPException(status_code=404, detail="Link not found")
     return {
@@ -51,13 +51,13 @@ def get_link_info(link_id: str, day: str, period: str, db: Session = Depends(get
 
 
 @app.get("/patterns/slow_links/")
-def get_slow_links(period: str, threshold: float, min_days: int, db: Session = Depends(get_db)):
-    return crud.get_slow_links(db, period, threshold, min_days)
+def get_slow_links(time_period: str, threshold: float, min_days: int, db: Session = Depends(get_db)):
+    return crud.get_slow_links(db, time_period, threshold, min_days)
 
 
 @app.post("/aggregates/spatial_filter/", response_model=List[schemas.GeoJSONFeature])
 def spatial_filter(req: schemas.SpatialFilterRequest, db: Session = Depends(get_db)):
-    rows = crud.get_links_in_bbox(db, req.day, req.period, req.bbox)
+    rows = crud.get_links_in_bbox(db, req.day_of_week, req.time_period, req.bbox)
     features = []
     for row in rows:
         geom = to_shape(row.geometry)
