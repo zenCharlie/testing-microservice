@@ -1,19 +1,26 @@
-fastapi
-uvicorn[standard]
+# Core Web Framework
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
 
-sqlalchemy
-geoalchemy2
-psycopg2-binary
+# Database ORM & PostGIS
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
+geoalchemy2==0.14.4
 
-pandas
-pyarrow
-tqdm
-shapely
-geopandas
+# Geo and ETL
+pandas==2.2.2
+geopandas==0.14.3
+shapely==2.0.4
+pyproj==3.6.1
+fiona==1.9.6
+pyarrow==15.0.2
 
-requests
-mapboxgl
-python-multipart
-typing
-jupyter
+# Visualization
+mapboxgl==0.10.2
+ipython==8.24.0
+notebook==7.2.0
+jupyterlab==4.2.1
 
+# Dev tools
+python-dotenv==1.0.1
+tqdm==4.66.4

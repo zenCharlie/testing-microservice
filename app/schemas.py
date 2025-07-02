@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List, Any
-
+from typing import Dict, Any
 
 class LinkBase(BaseModel):
     link_id: str
@@ -24,9 +24,9 @@ class AggregatedSpeed(BaseModel):
 
 
 class GeoJSONFeature(BaseModel):
-    type: str = "Feature"
-    geometry: dict
-    properties: dict
+    type: str = Field(default="Feature", const=True)
+    geometry: Dict[str, Any]
+    properties: Dict[str, Any]
 
 
 class GeoJSONFeatureCollection(BaseModel):
