@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
-from .database import Base
+from app.database import Base
 
 
 class Link(Base):
@@ -11,8 +11,7 @@ class Link(Base):
     link_id = Column(String, unique=True, index=True)
     road_name = Column(String)
     length = Column(Float)
-    geometry = Column(Geometry(geometry_type="LINESTRING", srid=4326))  # WGS84
-
+    geometry = Column(Geometry(geometry_type="MULTILINESTRING", srid=4326))
     speed_records = relationship("SpeedRecord", back_populates="link")
 
 
@@ -21,7 +20,7 @@ class SpeedRecord(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     timestamp = Column(DateTime, index=True)
-    speed = Column(Float)
+    average_speed = Column(Float)
     day_of_week = Column(String)  # e.g., "Monday", "Tuesday", etc.
     time_period = Column(String)  # e.g., "AM Peak", "PM Peak"
     

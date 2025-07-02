@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import database, crud, schemas
 from geoalchemy2.shape import to_shape
+from typing import List
 
 app = FastAPI()
 

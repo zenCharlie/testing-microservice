@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.6 Safari/605.1.15" version="27.2.0">
+  <diagram name="Page-1" id="xKaaTYpnEULXtpdTicbg">
+    <mxGraphModel dx="2076" dy="1135" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Qgnekt_XgAKBmOzglI5P-2" target="Qgnekt_XgAKBmOzglI5P-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-2" value="&amp;nbsp;Client Apps&lt;br&gt;&lt;div&gt;(MapboxGL Jupyter Notebook)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="40" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Qgnekt_XgAKBmOzglI5P-3" target="Qgnekt_XgAKBmOzglI5P-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-3" value="FastAPI Application&lt;div&gt;(REST API Endpoints)&amp;nbsp;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- /aggregates/&amp;nbsp;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- /aggregates/{link_id}&lt;br&gt;&lt;/div&gt;&lt;div&gt;- /patterns/slow_links/&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;p style=&quot;margin: 0px; font-style: normal; font-variant-caps: normal; font-stretch: normal; font-size: 13px; line-height: normal; font-family: &amp;quot;Helvetica Neue&amp;quot;; font-size-adjust: none; font-kerning: auto; font-variant-alternates: normal; font-variant-ligatures: normal; font-variant-numeric: normal; font-variant-east-asian: normal; font-variant-position: normal; font-variant-emoji: normal; font-feature-settings: normal; font-optical-sizing: auto; font-variation-settings: normal;&quot;&gt;- /aggregates/spatial_filter/&lt;/p&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontColor=default;" vertex="1" parent="1">
+          <mxGeometry x="180" y="190" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-6" value="SQLAlchemy ORM Models&lt;div&gt;- Link&amp;nbsp;&lt;br&gt;&lt;/div&gt;&lt;div&gt;- SpeedRecord&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="222.5" y="430" width="210" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-8" value="PostgreSQL + PostGIS DB&lt;div&gt;- links (geometry: LineString or MultiLineString)&lt;br&gt;&lt;/div&gt;&lt;div&gt;- speed_records (timestamp, average_speed, FK to links)&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-110" y="760" width="340" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.482;entryY=0.05;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Qgnekt_XgAKBmOzglI5P-6" target="Qgnekt_XgAKBmOzglI5P-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Qgnekt_XgAKBmOzglI5P-11" target="Qgnekt_XgAKBmOzglI5P-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-11" value="ETL Ingestion (One-time)&lt;div&gt;etl/ingest_parquet.py&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Load .parquet files&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Normalize geometry&lt;br&gt;&lt;/div&gt;&lt;div&gt;- Insert into DB&amp;nbsp;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="432.5" y="730" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-13" value="Data Sources (.parquet)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="960" width="210" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Qgnekt_XgAKBmOzglI5P-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.533;entryY=0.029;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Qgnekt_XgAKBmOzglI5P-11" target="Qgnekt_XgAKBmOzglI5P-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

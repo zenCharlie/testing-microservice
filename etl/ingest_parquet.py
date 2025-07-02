@@ -1,12 +1,18 @@
 import pandas as pd
-from shapely.geometry import LineString
+import sys
+import os
+from shapely.geometry import MultiLineString, LineString
+from shapely import wkt
 from geoalchemy2.shape import from_shape
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-from app import models, utils
-import os
-from tqdm import tqdm
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from app import models, utils
+from tqdm import tqdm
+import json
+from shapely.geometry import shape
+from app.utils import load_speed_data
 
 # Load DB connection from env
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql+psycopg2://user:password@localhost:5432/trafficdb")
@@ -16,15 +22,28 @@ engine = create_engine(DATABASE_URL)
 models.Base.metadata.create_all(engine)
 
 
+def normalize_geometry(geom):
+    if isinstance(geom, MultiLineString):
+        # Just take the first LineString component
+        return geom.geoms[0] if geom.geoms else None
+    elif isinstance(geom, LineString):
+        return geom
+    return None
+
+
 def load_link_info(path: str) -> pd.DataFrame:
     df = pd.read_parquet(path)
-    df["geometry"] = df["coordinates"].apply(lambda coords: LineString(coords))
-    return df
-
-
-def load_speed_data(path: str) -> pd.DataFrame:
-    df = pd.read_parquet(path)
-    df = utils.process_speed_data(df)
+    print("📊 Columns in Link File:", df.columns.tolist())
+    df["length"] = df["_length"]
+    if "geo_json" in df.columns:
+        # Parse GeoJSON into shapely geometry
+        df["geometry"] = df["geo_json"].apply(lambda g: shape(json.loads(g)))
+    elif "geometry" in df.columns:
+        df["geometry"] = df["geometry"].apply(wkt.loads)
+    elif "coordinates" in df.columns:
+        df["geometry"] = df["coordinates"].apply(lambda coords: LineString(coords))
+    else:
+        raise ValueError("Expected 'geo_json', 'coordinates', or 'geometry' column in link_info.parquet.gz")
     return df
 
 
@@ -36,12 +55,16 @@ def insert_data(link_df: pd.DataFrame, speed_df: pd.DataFrame, batch_size=500):
 
     print("Inserting links...")
     for row in tqdm(link_df.itertuples(), total=len(link_df)):
+        geom = normalize_geometry(row.geometry)
+        if geom is not None:
+            geometry = from_shape(geom, srid=4326)
         geom = from_shape(row.geometry, srid=4326)
         link = models.Link(
             link_id=row.link_id,
             road_name=row.road_name,
-            length=row.length,
-            geometry=geom
+            geometry=geom,
+            length=row.length
+
         )
         session.add(link)
         session.flush()
@@ -57,7 +80,7 @@ def insert_data(link_df: pd.DataFrame, speed_df: pd.DataFrame, batch_size=500):
 
         record = models.SpeedRecord(
             timestamp=row.timestamp,
-            speed=row.speed,
+            average_speed=row.average_speed,
             day_of_week=row.day_of_week,
             time_period=row.time_period,
             link_id=link_id_map[row.link_id]
@@ -87,4 +110,3 @@ if __name__ == "__main__":
 
     print("📥 Starting data ingestion...")
     insert_data(link_df, speed_df)
-
