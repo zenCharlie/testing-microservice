@@ -32,7 +32,7 @@ def get_aggregated_speed(db: Session, day: str, period: str):
             models.Link.road_name,
             models.Link.length,
             models.Link.geometry,
-            func.avg(models.SpeedRecord.speed).label("average_speed"),
+            func.avg(models.SpeedRecord.average_speed).label("average_speed"),
         )
         .join(models.SpeedRecord)
         .filter(
@@ -51,7 +51,7 @@ def get_link_aggregate(db: Session, link_id: str, day: str, period: str):
             models.Link.road_name,
             models.Link.length,
             models.Link.geometry,
-            func.avg(models.SpeedRecord.speed).label("average_speed"),
+            func.avg(models.SpeedRecord.average_speed).label("average_speed"),
         )
         .join(models.SpeedRecord)
         .filter(
@@ -72,12 +72,12 @@ def get_slow_links(db: Session, period: str, threshold: float, min_days: int):
         db.query(
             models.Link.link_id,
             models.SpeedRecord.day_of_week,
-            func.avg(models.SpeedRecord.speed).label("avg_speed")
+            func.avg(models.SpeedRecord.average_speed).label("avg_speed")
         )
         .join(models.SpeedRecord)
         .filter(models.SpeedRecord.time_period == period)
         .group_by(models.Link.link_id, models.SpeedRecord.day_of_week)
-        .having(func.avg(models.SpeedRecord.speed) < threshold)
+        .having(func.avg(models.SpeedRecord.average_speed) < threshold)
         .subquery()
     )
 
@@ -103,7 +103,7 @@ def get_links_in_bbox(db: Session, day: str, period: str, bbox: List[float]):
             models.Link.road_name,
             models.Link.length,
             models.Link.geometry,
-            func.avg(models.SpeedRecord.speed).label("average_speed")
+            func.avg(models.SpeedRecord.average_speed).label("average_speed")
         )
         .join(models.SpeedRecord)
         .filter(
