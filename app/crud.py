@@ -72,7 +72,7 @@ def get_slow_links(db: Session, period: str, threshold: float, min_days: int):
         db.query(
             models.Link.link_id,
             models.SpeedRecord.day_of_week,
-            func.avg(models.SpeedRecord.average_speed).label("avg_speed")
+            func.avg(models.SpeedRecord.speed).label("avg_speed")
         )
         .join(models.SpeedRecord)
         .filter(models.SpeedRecord.time_period == period)
